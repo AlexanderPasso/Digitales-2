@@ -1,0 +1,31 @@
+module alu(a, b, ALUControl, Result, ALUFlags);
+
+	//PORTS
+	input logic [1:0] ALUControl;
+	input logic [31:0] A, B;
+	output logic [31:0] Result;
+	output logic [3:0] ALUFlags;
+
+	
+	//SIGNALS
+	logic [32:0] sum;
+	logic [31:0] temp;
+	logic [31:0] ALUResult;
+	//Addition for carry
+	assign sum = {1'b0,A}+{1'b0,B};
+	
+	//OP ALUFLAGS
+		assign temp = ~Result;
+		assign ALUFlags[2] = temp[32] & temp[31] & temp[30] & temp[29] & temp[28] & temp[27] & temp[26] & temp[25] & temp[24] & 
+									temp[23] & temp[22] & temp[21] & temp[20] & temp[19] & temp[18] & temp[17] & temp[16] & temp[15] &
+									temp[14] & temp[13] & temp[12] & temp[11] & temp[10] & temp[9] & temp[8] & temp[7] & temp[6] & 
+									temp[5] & temp[4] & temp[3] & temp[2] & temp[1] & temp[0];
+		assign ALUFlags[0] = 1'b0;
+		assign ALUFlags[1] = sum[33] & ALUControl[1];
+		
+								
+									
+		assign ALUFlags[3] = 1'b0;
+	
+
+endmodule
