@@ -1,0 +1,16 @@
+module controller_top(CLK, RST, ALUFlags, InstrAddr, leerInst, ReadInstrOut, WE, ALUorM);
+    
+	 input logic CLK;
+	 input logic RST;
+	 input logic [1:0]  ALUFlags;
+	 output logic [7:0] InstrAddr;
+	 output logic [15:0] leerInst;
+	 output logic [15:0] ReadInstrOut;
+	 output logic WE;
+	 output logic ALUorM;
+	
+	Controller_Unit_FSM control(CLK, RST,ALUFlags,InstrAddr,leerInst,ReadInstrOut,WE, ALUorM);
+		  
+	IntruccionMemory DataMemory(InstrAddr,leerInst);
+
+endmodule

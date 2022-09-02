@@ -1,0 +1,37 @@
+
+module InstruccionMemory(IAddr,RInstr);
+
+	input logic [7:0] IAddr;
+	output logic [15:0] RInstr;
+	
+	
+	logic [15:0] regis[255:0];
+	
+	assign RInstr = regis[IAddr];
+		
+  initial begin
+  
+      regis[0] = 16'hB100;
+		regis[1] = 16'hA109;
+		regis[2] = 16'hCD01;
+		regis[3] = 16'hB800;
+		regis[4] = 16'h7440;
+		regis[5] = 16'h9F01;
+		regis[6] = 16'hB900;
+		regis[7] = 16'hF702;
+		regis[8] = 16'hA900;
+		regis[9] = 16'hA104;
+		regis[10] = 16'hD305;
+		regis[11] = 16'hB800;
+		regis[12] = 16'h6A80;
+		regis[13] = 16'h9F01;
+		regis[14] = 16'hB900;
+		regis[15] = 16'hEF03;
+		regis[17] = 16'hA900;
+		regis[16] = 16'hA103;
+		regis[18] = 16'hD307;
+
+		
+	end 
+
+endmodule

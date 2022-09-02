@@ -1,0 +1,32 @@
+module SimpleCPU_DM_IM_AV(input logic CLK,
+		input logic RST,
+		output logic WE,
+		output logic [7:0] InstrAddr,
+		output logic [15:0] ReadInstr,
+		output logic [7:0] DataAddr,
+		output logic [7:0] ReadData,
+		output logic [7:0] WriteData
+);
+
+		 logic [15:0] ReadInstrOut;
+		 logic [1:0] ALUFlags;
+		 logic CarryFlag;
+		 logic ALUorM;
+		 logic [2:0] ALUCntrl;
+		 
+		 always @(*) begin
+			if (ReadInstrOut[15:14]==2'b11) begin
+				ALUCntrl <= 3'b011;
+			end
+			else begin
+				ALUCntrl <= ReadInstrOut[15:13];
+			end
+		 
+		 end
+		 
+		
+		controller_top control(CLK, RST, ALUFlags, InstrAddr,ReadInstr,ReadInstrOut, WE, ALUorM);
+		
+		DP_DM_AV Datapath(CLK, RST, ReadInstrOut[10:9], ReadInstrOut[12:11], ReadInstrOut[7:0], ALUorM, ALUCntrl, WE, ReadInstrOut[8], WriteData, DataAddr,ReadData, ALUFlags, CarryFlag);
+				
+		endmodule
