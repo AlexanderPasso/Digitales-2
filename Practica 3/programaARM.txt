@@ -1,0 +1,191 @@
+.global _start
+
+.equ	MAXN, 12
+	.text
+_start:
+	MOV	r0, #MAXN  // Asigna el tamaño de la lista MAXN a r0
+	LDR	r2, =listaOut // Almacena la dirección del inicio de la lista
+	LDR r12, =OP // OP se encuentra ubicado en la direccion dada por la etiqueta OP.
+
+// --------------- Se asigna la instrucción OP a r11 -----------------
+	ldr r11, [r12]
+// --------------- Selección de instrucción --------------------
+// --------------- Orden Descendente ------------------
+	CMP	r11, #1
+ 	BLEQ guardar
+	CMP	r11, #1
+	BLEQ Descendente
+// --------------- Orden Ascendente ------------------
+	CMP	r11, #2
+ 	BLEQ guardar
+	CMP	r11, #2
+ 	BLEQ Ascendente
+// -------------- Múltiplo ------------------
+ 	CMP r11, #3
+ 	BLEQ mult
+ 	MOV r9,#0
+	MOV r10,#0
+ _stop:
+ 	B _stop
+
+// -------------- FUNCIONES ---------------
+
+// ----------------------- Hallar múltiplos ---------------------------
+mult:
+	
+	ldr r7,=M // Asigna la dirección dónde se enuentra el número múltiplo
+	ldr r8, [r7] // Asigna el valor del múltiplo que está dentro de la dirección
+	ldr r4,=listaOut // Asigna la dirección inicial de la lista de salida
+	sub r0, r0, #0x1 // Resta entre el valor que hay en r0 (tamaño de la lista) y 1
+
+loop2:
+	ldr r3, [r2], #4  //LE PASA EL VALOR DE LA POSICION ACTUAL DE MEMORIA Lista E INCREMENTA
+	mov r10, r3 // Asigna el valor de lo que hay en r3. Variable auxiliar
+	subs r9, r3, #0x0 // Resta de r3 y 0 para asignar a r9
+	
+	// -------------- Si el número es negativo -------------------
+	mvnMI r3, r3 // Se invierten todos los bits, ya que el número está en complemento a2 
+	addMI r3, r3, #1 // Se suma uno para al r3 anterior para tener el número positivo
+	// ------------------------------------------------------------
+	
+	ldr r1, =Savelr // Dirección de la variable Savelr. Guarda la dirección para mantener el retorno de la función
+	str lr, [r1] // Se asigna la dirección lr al registro r1
+	BL MULTIPLO     // LLama a la funcion MULTIPLO
+	ldr r1, =Savelr // Apunta a la dirección donde está almacenada lr
+	ldr lr, [r1] // Vuelve a retornar el valor de lr, con el fin de seguir con el ciclo de la función
+	subs r0,r0,#1   // Le resta 1 a la longitud de los datos
+	mov r5, #0 // Reinicia el valor de r5
+	
+	bpl loop2        //Sale del loop2
+	
+BX lr	
+	
+MULTIPLO:
+
+loop3:
+	subs r5, r3, r8 // SE HACE LA RESTA VALOR dividendo - divisor
+
+	// ------- Si la resta da cero, r10 se asigna a r6. (r10 es variable que contiene el actual número de la lista) -------
+	movEQ r6, r10 // Si  da r5=0 se pasa a r6 el valor del número múltiplo
+	strEQ r6, [r4], #4    // Si  da r5=0  Se escribe en la posicion de memoria de ListaOut el número múltiplo
+	// --------------------------------------------------------------------------------------------------------------------
+
+	mov r3, r5 // Se actualiza r3 con el valor de r5 hasta que se complete la resta
+	bpl  loop3 // Sale del loop3
+	MOV r5,#0 // Reinicia el valor de r5
+	MOV r6,#0 // Reinicia el valor de r6
+BX lr
+
+// ---------------------------- Guardar ------------------------------
+guardar:
+	MOV	r6,#0
+	MOV	r3,#0
+	MOV	r7,#0
+    MOV	r8,#0
+	MOV	r9,#0
+	MOV	r10,#0
+	MOV	r4,#0
+	
+	ldr r8, =listaOut // Asigna la dirección inicial de la lista donde estarán los datos ordenados
+	mov r10,#MAXN // Asigna a r10 el tamaño de la lista original
+	ldr r7,=lista // Asigna la dirección inicial que contiene los datos
+loopG:
+	ldr r9, [r7], #4 // Asigna el dato de la lista en la que está apuntando la dirección. Y se incrementa una posición
+	str r9, [r8], #4 // Almacena en r8 (dirección de lista de salida) el dato que está en r9
+	subs r10, r10, #1 // Resta el tamaño de la lista. (Controla el loopG) 
+	bpl  loopG
+	
+	MOV	r7,#0
+    	MOV	r8,#0
+	MOV	r9,#0
+	MOV	r10,#0
+BX lr
+
+// ------------------------- ORDEN DESCEDENTE -------------------------------
+
+Descendente:
+
+MOV r6,#0 // Reinicia el registro r6
+MOV r3,#0 // Reinicia el registro r3
+MOV r8,#0 // Reinicia el registro r8
+MOV r7,#0 // Reinicia el registro r7
+MUL r1, r0, r0
+ADD r1, r1,#150
+
+loop:
+	ldr r3, [r2], #4  //LE PASA EL VALOR DE LA POSICION ACTUAL DE MEMORIA E INCREMENTA
+	ldr r4, [r2]     // LE PASA VALOR SIGUIENTE DE MEMORIA
+	subs r5, r3, r4  // SE HACE LA RESTA VALOR ACTUAL Y SIGUIENTE
+
+	strMI r3, [r2]   // SI ES NEGATIVO INTERCAMBIA 
+	strMI r4, [r2,#-4] // SI ES NEGATIVO INTERCAMBIA 
+
+	strPL r3, [r2, #-4]  //SI ES POSITIVO NO SE INTERCAMBIA
+	strPL r4, [r2]
+	
+	subs r0, r0, #1     //EL FOR PARA RECORRER ARRAY Y VOLVER A INICIO DEL ARRAY
+	CMP r0, #1
+	ldrEQ r2,=listaOut   //VUELVE AL INICIO DEL ARRAY 
+	movEQ	r0,#MAXN	//REINICIA FOR DE R0
+
+	subs r1, r1, #1    // FOR N x N PARA TERMINAR EL LOOP
+	bpl  loop
+	
+	MOV	r4,#0
+    	MOV	r5,#0
+	
+	BX lr	
+	
+// ------------------------- ORDEN ASCEDENTE -------------------------------
+
+Ascendente:	
+MOV	r6,#0 // Reinicia el registro r6
+MOV	r3,#0 // Reinicia el registro r3
+MOV	r8,#0 // Reinicia el registro r8
+MOV	r7,#0 // Reinicia el registro r7
+
+MUL r1, r0, r0 // Para hacer un for de N x N 
+ADD r1, r1, #150
+	
+loop1:
+	ldr r3, [r2],#4  //LE PASA EL VALOR DE LA POSICION ACTUAL DE MEMORIA E INCREMENTA
+	ldr r4, [r2]     // LE PASA VALOR SIGUIENTE DE MEMORIA
+	subs r5, r3, r4  // SE HACE LA RESTA VALOR ACTUAL Y SIGUIENTE
+
+	strMI r3, [r2, #-4]  //SI ES NEGATIVO NO SE INTERCAMBIA, SE REGRESA A LA POSICIÓN INICIAL DE LA LISTA
+	strMI r4, [r2]  // SI ES NEGATIVO NO SE INTERCAMBIA, SE DEJA EN LA POSICIÓN ACTUAL (YA ESTÁ CORRIDA)
+
+	strPL r3, [r2]   // SI ES POSITIVO INTERCAMBIA 
+	strPL r4, [r2,#-4] // SI ES POSITIVO INTERCAMBIA 
+
+	sub r0, r0, #1     //EL FOR PARA RECORRER ARRAY Y VOLVER A INICIO DEL ARRAY
+	CMP r0, #1
+	ldrEQ r2, =listaOut   //VUELVE AL INICIO DEL ARRAY 
+	movEQ r0, #MAXN	//REINICIA FOR DE R0
+
+	subs r1, r1, #1    // FOR N x N PARA TERMINAR EL LOOP
+	bpl  loop1
+	
+	MOV	r4,#0
+    	MOV	r5,#0
+	
+	BX lr	
+	
+finish:
+	b	 finish
+	
+.data
+.align
+OP:.dc.l 3
+
+N:.dc.l MAXN
+
+M:.dc.l 3
+
+lista: .dc.l 1,15,-79,35,96,-564,8542,-89542,12021,54215,12,-35
+listaOut:.ds.l MAXN 
+
+Savelr: .ds.l 1
+
+.end
+	
