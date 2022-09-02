@@ -1,0 +1,15 @@
+
+module flipD (input logic Clk,
+				  input logic Rst,
+				  input logic En,
+				  input logic [7:0] D,
+				  output logic [7:0] Q);
+				  
+
+	always_ff @(posedge Clk, posedge Rst)
+		if(Rst)
+			q<=4'b0
+		else if (En)
+			q <= D
+			
+endmodule 

@@ -1,0 +1,28 @@
+
+module datapath(input logic [1:0] RSrc1,
+					 input logic [1:0] RDst3,
+					 input logic [1:0] ALUCntr,
+					 input logic [1:0] ALUSrc2,
+					 input logic [1:0] ALUorM,
+					 input logic Reset,
+					 input logic CLK, WE,
+					 input logic [7:0] Src2,
+					 output logic DataAddr [7:0],
+					 output logic [7:0] WriteData);
+					 
+					 logic [1:0] inRA2; //Entrada a RA1 del registro
+					 logic [7:0] Result; //Entrada a WDe del registro
+					 logic [7:0] outRD2, outRD1; // Salidas por RD1 y RD2 del registro
+					 logic [7:0] outALU; //Salida de la ALU
+					 logic [7:0] inRD; //Salida por RD de la memoria 
+					 logic [7:0] inALUB;
+					 
+					 Mux2to1 M1(WE,Src2, RDst3, inRA2);
+					 RegisterFile RF(RSrc1, inRA2,RDst3, Result, WE,Reset,CLK,outRD1, outRD2);
+					 ALU AL(outRD1,inALUB, ALUCntr, outALU);
+					 Mux2to1 M2(ALUSrc2,outRD2, Src2, inALUB);
+					 Mux2to1 M3(ALUorM,outALU, inRD,Result);
+					 
+
+endmodule 
+

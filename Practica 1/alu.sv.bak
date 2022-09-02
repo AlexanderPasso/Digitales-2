@@ -1,0 +1,50 @@
+
+module alu(input [7:0] A,B,
+			  input [2:0] Cntr,
+			  output [7:0] R
+			  );
+			  
+	always_comb  begin
+	  case(Cntr)
+			3'b000:
+				R= A & B;
+			3'b001:
+				R= ~B;
+			3'b010:
+				R= A ^ B;
+			3'b011:
+				R= A + B;
+			3'b100:
+				R= A - B;
+			3'b101:
+				R= B;
+			3'b110:
+				R= 8'b0;
+			3'b111:
+				R= 8'b0;
+		 default:
+			 R= 8'b0;
+     endcase
+  end
+endmodule 
+
+module alu_tb;
+		logic [7:0] A, B;
+		logic [2:0] Cntr;
+		logic [7:0] R;
+		alu al(A, B, Cntr,R);
+		
+		//integer i;
+	initial begin
+			  
+		A = 8'b00001011; B = 8'b00101000; Cntr=3'b000; #10;
+		A = 8'b00101101; B = 8'b10101010; Cntr=3'b001; #10;
+		A = 8'b01010110; B = 8'b01001001; Cntr=3'b010; #10;
+		A = 8'b11011011; B = 8'b00101001; Cntr=3'b011; #10;
+		
+		
+		$stop;
+		
+	end // initial	
+	
+endmodule

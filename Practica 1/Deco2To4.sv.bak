@@ -1,0 +1,21 @@
+
+module Deco2To4 (input logic [1:0] addr,
+					  output logic [7:0] out1, out2,out3,out4);
+					  
+					  wire line1,line2,line3,lin4;
+					  
+					  
+					  always @(addr)
+						begin
+							case(addr)
+					
+								00: out1<=line1;
+								01: out2<=line2;
+								10: out3<=line3;
+								11: out4<=line4;
+						
+							endcase
+						
+						end 				
+						
+endmodule 

@@ -1,0 +1,7 @@
+
+module Mux4to1 (input logic [1:0] sel,
+					 input logic [7:0] dat, 
+					 output logic [7:0] outMux);
+					 
+					 
+endmodule 

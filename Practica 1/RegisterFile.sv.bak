@@ -1,0 +1,7 @@
+module RegisterFile(input logic [1:0] RA1, RA2, RA3, 
+							input logic [7:0] WD3,
+							input logic WD3, RST, CLK,
+							output logic [7:0] RD1, RD2);
+
+
+endmodule

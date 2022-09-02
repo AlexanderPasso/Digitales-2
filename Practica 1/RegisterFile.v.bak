@@ -1,0 +1,6 @@
+
+module RegisterFile ( input logic [1:0] RA1, 
+							 input logic )
+
+
+endmodule 

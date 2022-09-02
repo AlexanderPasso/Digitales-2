@@ -1,0 +1,14 @@
+
+module Register32bits(input logic [7:0] dato1,dato2,dato3,dato4,
+							 input logic clk, en, rst,
+							 output logic [7:0] outRegister01,outRegister02,outRegister03.outRegister04);
+							 
+							 
+							 Register8bit R01(dato1,clk,rst,en,outRegister01);
+							 Register8bit R01(dato2,clk,rst,en,outRegister02);
+							 Register8bit R01(dato3,clk,rst,en,outRegister03);
+							 Register8bit R01(dato4,clk,rst,en,outRegister04);
+							 
+							 
+							 
+endmodule 
